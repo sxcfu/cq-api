@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.podinns.cqapi.mapper.ReservationMapper">
+  <resultMap id="BaseResultMap" type="com.podinns.cqapi.domain.Reservation">
+    <result column="hotel_id" jdbcType="BIGINT" property="hotelId" />
+    <result column="biz_date" jdbcType="TIMESTAMP" property="bizDate" />
+    <result column="rmno" jdbcType="VARCHAR" property="rmno" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="src" jdbcType="VARCHAR" property="src" />
+    <result column="channel" jdbcType="VARCHAR" property="channel" />
+    <result column="real_rate" jdbcType="DECIMAL" property="realRate" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="id_no" jdbcType="VARCHAR" property="idNo" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="sta" jdbcType="CHAR" property="sta" />
+    <result column="pay_code" jdbcType="VARCHAR" property="payCode" />
+  </resultMap>
+  <select id="selectReservations" parameterType="Reservation" resultMap="BaseResultMap">
+    SELECT a.hotel_id, a.biz_date,a.rmno,c.descript,d.descript,e.descript,a.real_rate,b.name,IF(b.sex='1','男','女') AS sex,b.id_no,b.mobile,b.street,a.sta,a.pay_code FROM master_base_sh a
+    JOIN code_base c ON a.hotel_group_id=c.hotel_group_id AND a.hotel_id=c.hotel_id AND a.market=c.code AND   c.parent_code ='market_code'
+    JOIN code_base d ON a.hotel_group_id=d.hotel_group_id AND a.hotel_id=d.hotel_id AND a.src=d.code AND    d.parent_code ='src_code'
+    JOIN code_base e ON a.hotel_group_id=e.hotel_group_id AND a.hotel_id=e.hotel_id AND a.channel=e.code AND   e.parent_code ='channel'
+    ,master_guest_sh  b WHERE b.hotel_group_id = a.hotel_group_id AND  b.hotel_id = a.hotel_id AND a.id=b.id AND a.sta ='R'
+    AND  a.hotel_group_id=1 AND a.hotel_id IN (1079,1056) AND arr  BETWEEN NOW() AND  DATE_ADD(NOW(),INTERVAL 30 DAY)
+    UNION ALL
+    SELECT a.hotel_id,a.biz_date,a.rmno,c.descript,d.descript,e.descript,a.real_rate,b.name,IF(b.sex='1','男','女') AS sex,b.id_no,b.mobile,b.street,a.sta,a.pay_code  FROM master_base_sh a
+    JOIN code_base c ON a.hotel_group_id=c.hotel_group_id AND a.hotel_id=c.hotel_id AND a.market=c.code AND  c.parent_code ='market_code'
+    JOIN code_base d ON a.hotel_group_id=d.hotel_group_id AND a.hotel_id=d.hotel_id AND a.src=d.code   AND  d.parent_code ='src_code'
+    JOIN code_base e ON a.hotel_group_id=e.hotel_group_id AND a.hotel_id=e.hotel_id AND a.channel=e.code AND  e.parent_code ='channel'
+    ,master_guest_sh  b
+    WHERE b.hotel_group_id = a.hotel_group_id AND  b.hotel_id = a.hotel_id AND a.id=b.id AND a.sta ='I'  AND a.id <![CDATA[ <> ]]> a.rsv_id
+    AND  a.hotel_group_id=1 AND a.hotel_id IN (1079,1056)  AND a.rsv_class <![CDATA[ <> ]]>'H';
+  </select>
+</mapper>

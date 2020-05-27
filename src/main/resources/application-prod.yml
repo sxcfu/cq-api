@@ -1,0 +1,26 @@
+server:
+  port: 8989
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  datasource:
+    username: gc_dev
+    password: podinn88?
+    url: jdbc:mysql://192.168.5.11:3306/platform?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.podinns.cqapi
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+
+#showSql
+logging:
+  level:
+    com:
+      podinns:
+        cqapi:
+          mapper : debug
+cqapi:
+  appId: chunqiu
+  appSecret: 62wqs4sawd

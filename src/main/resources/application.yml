@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: prod
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force-response: true

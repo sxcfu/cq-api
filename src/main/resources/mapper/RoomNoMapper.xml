@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.podinns.cqapi.mapper.RoomNoMapper">
+  <resultMap id="BaseResultMap" type="com.podinns.cqapi.domain.RoomNo">
+    <result column="hotel_id" jdbcType="BIGINT" property="hotelId" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="rm_descript" jdbcType="VARCHAR" property="rmDescript" />
+    <result column="floor" jdbcType="VARCHAR" property="floor" />
+    <result column="features" jdbcType="VARCHAR" property="features" />
+    <result column="rmclass" jdbcType="VARCHAR" property="rmclass" />
+  </resultMap>
+  <select id="selectRoomNos" parameterType="RoomNo" resultMap="BaseResultMap">
+    SELECT a.hotel_id,a.code,b.descript,a.floor,c.descript,CASE b.rmclass WHEN 'BZ' THEN '双床'
+  WHEN 'DR'  THEN '大床'
+  ELSE   '套房'
+ END rmclass FROM room_no_sh a LEFT JOIN room_type b  ON a.hotel_group_id=b.hotel_group_id AND a.hotel_id=b.hotel_id AND a.rmtype=b.code
+ LEFT JOIN code_base c ON  a.hotel_group_id=c.hotel_group_id AND a.hotel_id=b.hotel_id AND a.feature=c.code AND c.hotel_group_id=1 AND c.hotel_id =1079 AND c.parent_code='room_feature'
+ WHERE
+a.hotel_group_id=1 AND a.hotel_id IN (1079,1056)  ;
+  </select>
+</mapper>
